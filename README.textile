@@ -1,0 +1,4 @@
+h1. O círculo trigonométrico 
+
+Esta atividade interativa expositiva apresenta ao usuário os segmentos do círculo trignométrico que definem o seno, cosseno, tangente, cotangente, secante e cossecante.
+
