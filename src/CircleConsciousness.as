@@ -1,4 +1,5 @@
 package {
+	import fl.motion.easing.Linear;
 	import flash.geom.Point;
 	public class CircleConsciousness {
 		
@@ -14,7 +15,7 @@ package {
 		
 		public function CircleConsciousness () {
 			lines = new Vector.<Line>(6, true);
-			for (var i:int = 0; i < 6; i++) lines[i] = new Point();
+			for (var i:int = 0; i < 6; i++) lines[i] = new Line(new Point(), new Point(1,0));
 			angle = 0;
 		}
 		
@@ -32,6 +33,8 @@ package {
 			lines[SEC].b = new Point(r / Math.cos(rad), 0);
 			//lines[CSC].a = (0,0);
 			lines[CSC].b = new Point(0, r / Math.sin(rad));
+			
+			for each (var line:Line in lines) trace(line);
 		}
 		
 		public function getSegments (point:Point) : Array {
@@ -40,6 +43,7 @@ package {
 			for (var i:int = 0; i < 6; i++) {
 				var dotProduct:Number = lines[i].dotProduct(point);
 				var distance:Number = lines[i].distance(point);
+				trace(i + "\t" + distance + "\t" + dotProduct);
 				if (distance < d && dotProduct >= 0 - d && dotProduct <= 1 + d) ans.push(i);
 			}
 			
