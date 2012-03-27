@@ -1,17 +1,19 @@
 package 
 {
+	import BaseAssets.BaseMain;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	/**
 	 * ...
 	 * @author Alexandre
 	 */
-	public class Main extends Sprite 
+	public class Main extends BaseMain 
 	{
 		private var seno:Sprite;
 		private var cosseno:Sprite;
@@ -36,6 +38,9 @@ package
 		private var glow:GlowFilter = new GlowFilter(0x800000);
 		private var selected:MovieClip;
 		
+		private var linhaPontilhada:LinhaPontilhada;
+		private var linhaPontilhadaTangente:LinhaPontilhada;
+		
 		public function Main():void 
 		{
 			if (stage) init();
@@ -46,6 +51,7 @@ package
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			// entry point
+			this.scrollRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
 			
 			createEixos();
 			createCircle();
@@ -53,6 +59,8 @@ package
 			criaPt();
 			pt.x = Math.cos(angulo) * raio + circle.x;
 			pt.y = Math.sin(angulo) * raio + circle.y;
+			linhaPontilhadaTangente.x = pt.x;
+			linhaPontilhadaTangente.y = pt.y;
 			drawTrigonometrics();
 			criaOpcoes();
 			addListeners();
@@ -151,6 +159,17 @@ package
 			addChild(secante);
 			addChild(cossecante);
 			addChild(cotangente);
+			
+			linhaPontilhada = new LinhaPontilhada();
+			addChild(linhaPontilhada);
+			linhaPontilhada.x = circle.x;
+			linhaPontilhada.y = circle.y;
+			
+			linhaPontilhadaTangente = new LinhaPontilhada();
+			addChild(linhaPontilhadaTangente);
+			
+			setChildIndex(linhaPontilhada, 0);
+			setChildIndex(linhaPontilhadaTangente, 0);
 		}
 		
 		private function criaPt():void 
@@ -176,12 +195,14 @@ package
 			stage.addEventListener(MouseEvent.MOUSE_OUT, stageOut);
 		}
 		
+		private var names:Array = ["seno", "cosseno", "tangente", "secante", "cossecante", "cotangente"];
+		
 		private function stageOver(e:MouseEvent):void 
 		{
 			if(e.target is Sprite){
 				var obj:Sprite = Sprite(e.target);
 				
-				if (obj != circle && obj != pt && obj != eixos && obj != opcoes) {
+				if (names.indexOf(obj.name) > -1) {
 					selected = opcoes[obj.name];
 					selected.gotoAndStop(2);
 					//this[obj.name].filters = [glow];
@@ -196,7 +217,7 @@ package
 			if(e.target is Sprite){
 				var obj:Sprite = Sprite(e.target);
 				
-				if (obj != circle && obj != pt && obj != eixos && obj != opcoes) {
+				if (names.indexOf(obj.name) > -1) {
 					if(selected != null){
 						selected.gotoAndStop(1);
 						//this[obj.name].filters = [];
@@ -220,6 +241,8 @@ package
 			
 			pt.x = Math.cos(angulo) * raio + circle.x;
 			pt.y = Math.sin(angulo) * raio + circle.y;
+			linhaPontilhadaTangente.x = pt.x;
+			linhaPontilhadaTangente.y = pt.y;
 			
 			drawTrigonometrics();
 		}
@@ -232,6 +255,9 @@ package
 		
 		private function drawTrigonometrics():void 
 		{
+			linhaPontilhadaTangente.rotation = angulo * 180 / Math.PI + 90;
+			linhaPontilhada.rotation = angulo * 180 / Math.PI;
+			
 			drawSeno();
 			drawCosseno();
 			drawTangente();

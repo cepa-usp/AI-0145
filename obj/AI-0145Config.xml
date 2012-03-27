@@ -21,11 +21,14 @@
     <verbose-stacktraces>true</verbose-stacktraces>
     <source-path append="true">
       <path-element>D:\Projetos\05 - GitHub\AI-0145\src</path-element>
+      <path-element>C:\Program Files (x86)\Adobe\Adobe Flash CS5\Common\Configuration\ActionScript 3.0\projects\Flash\src</path-element>
       <path-element>D:\Projetos\CEPALib\AS3\src</path-element>
+      <path-element>C:\Program Files (x86)\Adobe\Adobe Flash CS5\Common\Configuration\ActionScript 3.0\projects\Flash\src</path-element>
       <path-element>C:\Program Files (x86)\FlashDevelop\Library\AS3\classes</path-element>
     </source-path>
     <library-path append="true">
       <path-element>D:\Projetos\05 - GitHub\AI-0145\lib\Arte.swc</path-element>
+      <path-element>D:\Projetos\05 - GitHub\AI-0145\lib\BaseAssets.swc</path-element>
     </library-path>
   </compiler>
   <file-specs>
