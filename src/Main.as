@@ -1,6 +1,7 @@
 package 
 {
 	import BaseAssets.BaseMain;
+	import cepa.utils.Angle;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -28,18 +29,22 @@ package
 		
 		private var raio:Number = 150;
 		private var angulo:Number = -45 * Math.PI / 180;
+		private var sprAngulo:Sprite;
 		
 		private var thickInvisible:Number = 10;
 		private var alphaInvisible:Number = 0;
-		private var tickNormal:Number = 3;
+		private var tickNormal:Number = 2;
 		
-		private var bordaOpcoes:Number = 15;
+		private var bordaOpcoes:Number = 10;
 		private var opcoes:MenuTrigonometrico;
-		private var glow:GlowFilter = new GlowFilter(0x800000);
+		private var glow:GlowFilter = new GlowFilter(0x800000, 1, 10, 10);
 		private var selected:MovieClip;
 		
 		private var linhaPontilhada:LinhaPontilhada;
 		private var linhaPontilhadaTangente:LinhaPontilhada;
+		
+		private var barraTexto:TextoExplicativo;
+		private var pontoCentral:Point = new Point(320, 285);
 		
 		public function Main():void 
 		{
@@ -53,6 +58,9 @@ package
 			// entry point
 			this.scrollRect = new Rectangle(0, 0, stage.stageWidth, stage.stageHeight);
 			
+			coresUint = [senoCor, cossenoCor, tangenteCor, secanteCor, cossecanteCor, cotangenteCor];
+			
+			createTextBar();
 			createEixos();
 			createCircle();
 			createSprites();
@@ -64,6 +72,148 @@ package
 			drawTrigonometrics();
 			criaOpcoes();
 			addListeners();
+			setTextForState();
+			
+			iniciaTutorial();
+		}
+		
+		private function createTextBar():void 
+		{
+			barraTexto = new TextoExplicativo();
+			barraTexto.x = 5;
+			barraTexto.y = stage.stageHeight - barraTexto.height - 5;
+			addChild(barraTexto);
+			setChildIndex(barraTexto, 0);
+		}
+		
+		private function createEixos():void 
+		{
+			var sobraEixos:Number = 100;
+			eixos = new Sprite();
+			eixos.x = pontoCentral.x;
+			eixos.y = pontoCentral.y;
+			
+			eixos.graphics.lineStyle(1, 0x808080, 0.5);
+			eixos.graphics.moveTo(- 30, 0);
+			eixos.graphics.lineTo(raio + sobraEixos, 0);
+			drawRightArrow(eixos, raio + sobraEixos, 0);
+			eixos.graphics.moveTo(0, 30);
+			eixos.graphics.lineTo(0, - raio - sobraEixos);
+			drawUpArrow(eixos, 0, - raio - sobraEixos);
+			
+			eixos.graphics.moveTo( -eixos.x, -raio);
+			eixos.graphics.lineTo(stage.stageWidth - eixos.x, -raio);
+			eixos.graphics.moveTo(raio, -eixos.y);
+			eixos.graphics.lineTo(raio, stage.stageWidth - eixos.y);
+			
+			addChild(eixos);
+		}
+		
+		private var widthArrow:Number = 10;
+		private var heightArrow:Number = 10;
+		private function drawUpArrow(spr:Sprite, ptX:Number, ptY:Number):void
+		{
+			spr.graphics.curveTo(ptX, ptY + heightArrow / 2, ptX - widthArrow / 2, ptY + heightArrow);
+			spr.graphics.moveTo(ptX, ptY);
+			spr.graphics.curveTo(ptX, ptY + heightArrow / 2, ptX + widthArrow / 2, ptY + heightArrow);
+			spr.graphics.moveTo(ptX, ptY);
+		}
+		
+		private function drawRightArrow(spr:Sprite, ptX:Number, ptY:Number):void
+		{
+			spr.graphics.curveTo(ptX - heightArrow / 2, ptY, ptX - heightArrow, ptY - widthArrow / 2);
+			spr.graphics.moveTo(ptX, ptY);
+			spr.graphics.curveTo(ptX - heightArrow / 2, ptY, ptX - heightArrow, ptY + widthArrow / 2);
+			spr.graphics.moveTo(ptX, ptY);
+		}
+		
+		private function createCircle():void 
+		{
+			if(circle == null){
+				circle = new Sprite();
+				circle.x = pontoCentral.x;
+				circle.y = pontoCentral.y;
+				addChild(circle);
+			}
+			circle.graphics.clear();
+			circle.graphics.lineStyle(1, 0x000000);
+			circle.graphics.drawCircle(0, 0, raio);
+		}
+		
+		private function createSprites():void 
+		{
+			seno = new Sprite();
+			cosseno = new Sprite();
+			tangente = new Sprite();
+			secante = new Sprite();
+			cossecante = new Sprite();
+			cotangente = new Sprite();
+			sprAngulo = new Sprite();
+			
+			seno.x = circle.x;
+			seno.y = circle.y;
+			cosseno.x = circle.x;
+			cosseno.y = circle.y;
+			tangente.x = circle.x;
+			tangente.y = circle.y;
+			secante.x = circle.x;
+			secante.y = circle.y;
+			cossecante.x = circle.x;
+			cossecante.y = circle.y;
+			cotangente.x = circle.x;
+			cotangente.y = circle.y;
+			sprAngulo.x = circle.x;
+			sprAngulo.y = circle.y;
+			
+			seno.buttonMode = true;
+			cosseno.buttonMode = true;
+			tangente.buttonMode = true;
+			secante.buttonMode = true;
+			cossecante.buttonMode = true;
+			cotangente.buttonMode = true;
+			sprAngulo.buttonMode = true;
+			
+			seno.name = "seno";
+			cosseno.name = "cosseno";
+			tangente.name = "tangente";
+			secante.name = "secante";
+			cossecante.name = "cossecante";
+			cotangente.name = "cotangente";
+			sprAngulo.name = "angulo";
+			
+			addChild(seno);
+			addChild(cosseno);
+			addChild(tangente);
+			addChild(secante);
+			addChild(cossecante);
+			addChild(cotangente);
+			addChild(sprAngulo);
+			
+			linhaPontilhada = new LinhaPontilhada();
+			addChild(linhaPontilhada);
+			linhaPontilhada.x = circle.x;
+			linhaPontilhada.y = circle.y;
+			
+			linhaPontilhadaTangente = new LinhaPontilhada();
+			addChild(linhaPontilhadaTangente);
+			
+			setChildIndex(linhaPontilhada, 0);
+			setChildIndex(linhaPontilhadaTangente, 0);
+		}
+		
+		private function criaPt():void 
+		{
+			pt = new Sprite();
+			addChild(pt);
+			
+			pt.graphics.beginFill(0x800000, 0);
+			pt.graphics.drawCircle(0, 0, 10);
+			pt.graphics.endFill();
+			pt.graphics.lineStyle(1, 0x000000);
+			pt.graphics.beginFill(0x000040);
+			pt.graphics.drawCircle(0, 0, 3);
+			
+			pt.buttonMode = true;
 		}
 		
 		private function criaOpcoes():void 
@@ -88,105 +238,6 @@ package
 			opcoes.cotangente.buttonMode = true;
 		}
 		
-		private function createCircle():void 
-		{
-			if(circle == null){
-				circle = new Sprite();
-				circle.x = stage.stageWidth / 2;
-				circle.y = stage.stageHeight / 2;
-				addChild(circle);
-			}
-			circle.graphics.clear();
-			circle.graphics.lineStyle(1, 0x000000);
-			circle.graphics.drawCircle(0, 0, raio);
-		}
-		
-		private function createEixos():void 
-		{
-			var sobraEixos:Number = 100;
-			eixos = new Sprite();
-			eixos.x = stage.stageWidth / 2;
-			eixos.y = stage.stageHeight / 2;
-			
-			eixos.graphics.lineStyle(1, 0x808080, 0.5);
-			eixos.graphics.moveTo( - raio - sobraEixos, 0);
-			eixos.graphics.lineTo(raio + sobraEixos, 0);
-			eixos.graphics.moveTo(0, - raio - sobraEixos);
-			eixos.graphics.lineTo(0, raio + sobraEixos);
-			
-			addChild(eixos);
-		}
-		
-		private function createSprites():void 
-		{
-			seno = new Sprite();
-			cosseno = new Sprite();
-			tangente = new Sprite();
-			secante = new Sprite();
-			cossecante = new Sprite();
-			cotangente = new Sprite();
-			
-			seno.x = circle.x;
-			seno.y = circle.y;
-			cosseno.x = circle.x;
-			cosseno.y = circle.y;
-			tangente.x = circle.x;
-			tangente.y = circle.y;
-			secante.x = circle.x;
-			secante.y = circle.y;
-			cossecante.x = circle.x;
-			cossecante.y = circle.y;
-			cotangente.x = circle.x;
-			cotangente.y = circle.y;
-			
-			seno.buttonMode = true;
-			cosseno.buttonMode = true;
-			tangente.buttonMode = true;
-			secante.buttonMode = true;
-			cossecante.buttonMode = true;
-			cotangente.buttonMode = true;
-			
-			seno.name = "seno";
-			cosseno.name = "cosseno";
-			tangente.name = "tangente";
-			secante.name = "secante";
-			cossecante.name = "cossecante";
-			cotangente.name = "cotangente";
-			
-			addChild(seno);
-			addChild(cosseno);
-			addChild(tangente);
-			addChild(secante);
-			addChild(cossecante);
-			addChild(cotangente);
-			
-			linhaPontilhada = new LinhaPontilhada();
-			addChild(linhaPontilhada);
-			linhaPontilhada.x = circle.x;
-			linhaPontilhada.y = circle.y;
-			
-			linhaPontilhadaTangente = new LinhaPontilhada();
-			addChild(linhaPontilhadaTangente);
-			
-			setChildIndex(linhaPontilhada, 0);
-			setChildIndex(linhaPontilhadaTangente, 0);
-		}
-		
-		private function criaPt():void 
-		{
-			pt = new Sprite();
-			addChild(pt);
-			
-			pt.graphics.beginFill(0x800000, 0);
-			pt.graphics.drawCircle(0, 0, 10);
-			pt.graphics.endFill();
-			pt.graphics.lineStyle(1, 0x000000);
-			pt.graphics.beginFill(0x000040);
-			pt.graphics.drawCircle(0, 0, 5);
-			
-			pt.buttonMode = true;
-		}
-		
 		private function addListeners():void 
 		{
 			pt.addEventListener(MouseEvent.MOUSE_DOWN, initDragPt);
@@ -196,19 +247,62 @@ package
 		}
 		
 		private var names:Array = ["seno", "cosseno", "tangente", "secante", "cossecante", "cotangente"];
+		private var cores:Array = ["vermelho", "verde", "amarelo", "azul", "rosa", "roxo"];
+		private var coresUint:Array;
+		private var angulosEspeciais:Array = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330];
+		private var notacaoAngulosEspeciais:Array = ["0","π/6", "π/4", "π/3", "π/2", "2π/3", "3π/4", "5π/6", "π", "7π/6", "5π/4", "4π/3", "3π/2", "5π/3", "7π/4", "11π/6"];
+		private var useGlow:Boolean = true;
 		
 		private function stageOver(e:MouseEvent):void 
 		{
 			if(e.target is Sprite){
 				var obj:Sprite = Sprite(e.target);
+				var indexObj:Number = names.indexOf(obj.name);
 				
-				if (names.indexOf(obj.name) > -1) {
+				if (indexObj > -1) {
 					selected = opcoes[obj.name];
 					selected.gotoAndStop(2);
-					//this[obj.name].filters = [glow];
-					this[obj.name + "Alpha"] = 0.3;
-					drawTrigonometrics();
+					if (useGlow) {
+						glow.color = coresUint[names.indexOf(obj.name)];
+						this[obj.name].filters = [glow];
+					}
+					else {
+						this[obj.name + "Alpha"] = 0.3;
+						drawTrigonometrics();
+					}
+					if (indexObj == 0 || indexObj == 1) barraTexto.texto.text = "O " + obj.name + " é definido pelo segmento de cor " + cores[indexObj] + ".";
+					else barraTexto.texto.text = "A " + obj.name + " é definida pelo segmento de cor " + cores[indexObj] + ".";
+				}else {
+					if (obj == pt) {
+						barraTexto.texto.text = "Arraste o ponto para modificar os segmentos.";
+					}else if (obj == sprAngulo) {
+						var a:Angle = new Angle();
+						a.radians = -angulo;
+						a.domain = Angle.ZERO_TO_PLUS_2PI;
+						
+						var indiceAngulo:Number = angulosEspeciais.indexOf(Math.round(a.degrees));
+						
+						if(indiceAngulo > -1) barraTexto.texto.text = "Ângulo entre o eixo x e o segmento que liga (0,0) ao ponto P = " + notacaoAngulosEspeciais[indiceAngulo] + " rad.";
+						else barraTexto.texto.text = "Ângulo entre o eixo x e o segmento que liga (0,0) ao ponto P = " + a.radians.toFixed(2) + " rad.";
+					}
 				}
+			}else {
+				switch(e.target.name) {
+					case botoes.tutorialBtn.name:
+						barraTexto.texto.text = "Reinicia o tutorial (balões).";
+						break;
+					case botoes.resetButton.name:
+						barraTexto.texto.text = "Reinicia a atividade interativa (retoma a situação inicial).";
+						break;
+					case botoes.orientacoesBtn.name:
+						barraTexto.texto.text = "Orientações e objetivos pedagógicos.";
+						break;
+					case botoes.creditos.name:
+						barraTexto.texto.text = "Licença e créditos desta atividade interativa.";
+						break;
+					
+				}
+				
 			}
 		}
 		
@@ -220,13 +314,22 @@ package
 				if (names.indexOf(obj.name) > -1) {
 					if(selected != null){
 						selected.gotoAndStop(1);
-						//this[obj.name].filters = [];
-						this[obj.name + "Alpha"] = 0;
+						if(useGlow) this[obj.name].filters = [];
+						else {
+							this[obj.name + "Alpha"] = 0;
+							drawTrigonometrics();
+						}
 						selected = null;
-						drawTrigonometrics();
 					}
 				}
 			}
+			
+			setTextForState();
+		}
+		
+		private function setTextForState():void
+		{
+			barraTexto.texto.text = "";
 		}
 		
 		private function initDragPt(e:MouseEvent):void 
@@ -238,6 +341,18 @@ package
 		private function movingPt(e:MouseEvent):void 
 		{
 			angulo = Math.atan2(stage.mouseY - circle.y, stage.mouseX - circle.x);
+			
+			var a:Angle = new Angle();
+			a.radians = -angulo;
+			a.domain = Angle.ZERO_TO_PLUS_2PI;
+			
+			lookAngle: for each (var item:Number in angulosEspeciais) 
+			{
+				if (Math.abs(item - a.degrees) < 2) {
+					angulo = -item * Math.PI / 180;
+					break lookAngle;
+				}
+			}
 			
 			pt.x = Math.cos(angulo) * raio + circle.x;
 			pt.y = Math.sin(angulo) * raio + circle.y;
@@ -258,12 +373,33 @@ package
 			linhaPontilhadaTangente.rotation = angulo * 180 / Math.PI + 90;
 			linhaPontilhada.rotation = angulo * 180 / Math.PI;
 			
+			drawAngle();
 			drawSeno();
 			drawCosseno();
 			drawTangente();
 			drawSecante();
 			drawCossecante();
 			drawCotangente();
+		}
+		
+		private var raioAngle:Number = 20;
+		private function drawAngle():void 
+		{
+			var angleGraus:Number;
+			var a:Angle = new Angle();
+			a.radians = -angulo;
+			a.domain = Angle.ZERO_TO_PLUS_2PI;
+			angleGraus = a.degrees;
+			
+			sprAngulo.graphics.clear();
+			sprAngulo.graphics.beginFill(0xFF0000);
+			sprAngulo.graphics.moveTo(0, 0);
+			sprAngulo.graphics.lineTo(raioAngle, 0);
+			for (var i:int = 0; i <= angleGraus; i++)
+			{
+				sprAngulo.graphics.lineTo(raioAngle * Math.cos(-i * Math.PI / 180), raioAngle * Math.sin(-i * Math.PI / 180));
+			}
+			sprAngulo.graphics.lineTo(0, 0);
 		}
 		
 		private var senoAlpha:Number = 0;
@@ -273,6 +409,13 @@ package
 		private var cossecanteAlpha:Number = 0;
 		private var cotangenteAlpha:Number = 0;
 		
+		private var senoCor:uint = 0x800000;
+		private var cossenoCor:uint = 0x008000;
+		private var tangenteCor:uint = 0x808000;
+		private var secanteCor:uint = 0x0000FF;
+		private var cossecanteCor:uint = 0xFF0080;
+		private var cotangenteCor:uint = 0x400080;
+		
 		private function drawSeno():void 
 		{
 			//var posSeno:Point = new Point(0, raio * Math.sin(angulo));
@@ -280,11 +423,11 @@ package
 			
 			seno.graphics.clear();
 			
-			seno.graphics.lineStyle(thickInvisible, 0x800000, senoAlpha);
+			seno.graphics.lineStyle(thickInvisible, senoCor, senoAlpha);
 			seno.graphics.moveTo(posSeno.x, 0);
 			seno.graphics.lineTo(posSeno.x, posSeno.y);
 			
-			seno.graphics.lineStyle(tickNormal, 0x800000);
+			seno.graphics.lineStyle(tickNormal, senoCor);
 			seno.graphics.moveTo(posSeno.x, 0);
 			seno.graphics.lineTo(posSeno.x, posSeno.y);
 		}
@@ -296,75 +439,150 @@ package
 			
 			cosseno.graphics.clear();
 			
-			cosseno.graphics.lineStyle(thickInvisible, 0x008000, cossenoAlpha);
+			cosseno.graphics.lineStyle(thickInvisible, cossenoCor, cossenoAlpha);
 			cosseno.graphics.moveTo(0, posCosseno.y);
 			cosseno.graphics.lineTo(posCosseno.x, posCosseno.y);
 			
-			cosseno.graphics.lineStyle(tickNormal, 0x008000);
+			cosseno.graphics.lineStyle(tickNormal, cossenoCor);
 			cosseno.graphics.moveTo(0, posCosseno.y);
 			cosseno.graphics.lineTo(posCosseno.x, posCosseno.y);
 		}
 		
 		private function drawTangente():void 
 		{
-			var posTangente:Point = new Point(raio, raio * Math.tan(angulo));;
+			var posTangente:Point = new Point(raio, Math.max(-1000, Math.min(raio * Math.tan(angulo), 1000)));
 			
 			tangente.graphics.clear();
 			
-			tangente.graphics.lineStyle(thickInvisible, 0x808000, tangenteAlpha);
+			tangente.graphics.lineStyle(thickInvisible, tangenteCor, tangenteAlpha);
 			tangente.graphics.moveTo(posTangente.x, 0);
 			tangente.graphics.lineTo(posTangente.x, posTangente.y);
 			
-			tangente.graphics.lineStyle(tickNormal, 0x808000);
+			tangente.graphics.lineStyle(tickNormal, tangenteCor);
 			tangente.graphics.moveTo(posTangente.x, 0);
 			tangente.graphics.lineTo(posTangente.x, posTangente.y);
 		}
 		
 		private function drawSecante():void 
 		{
-			var posSecante:Point = new Point(raio / Math.cos(angulo), 0);
+			var posSecante:Point = new Point(Math.max(-1000, Math.min(raio / Math.cos(angulo), 1000)), 0);
 			
 			secante.graphics.clear();
 			
-			secante.graphics.lineStyle(thickInvisible, 0x0000FF, secanteAlpha);
+			secante.graphics.lineStyle(thickInvisible, secanteCor, secanteAlpha);
 			secante.graphics.moveTo(0, 0);
 			secante.graphics.lineTo(posSecante.x, posSecante.y);
 			
-			secante.graphics.lineStyle(tickNormal, 0x0000FF);
+			secante.graphics.lineStyle(tickNormal, secanteCor);
 			secante.graphics.moveTo(0, 0);
 			secante.graphics.lineTo(posSecante.x, posSecante.y);
 		}
 		
 		private function drawCossecante():void 
 		{
-			var posCossecante:Point = new Point(0, raio / Math.sin(angulo));
+			var posCossecante:Point = new Point(0, Math.max(-1000, Math.min(raio / Math.sin(angulo), 1000)));
 			
 			cossecante.graphics.clear();
 			
-			cossecante.graphics.lineStyle(thickInvisible, 0xFF0080, cossecanteAlpha);
+			cossecante.graphics.lineStyle(thickInvisible, cossecanteCor, cossecanteAlpha);
 			cossecante.graphics.moveTo(0, 0);
 			cossecante.graphics.lineTo(posCossecante.x, posCossecante.y);
 			
-			cossecante.graphics.lineStyle(tickNormal, 0xFF0080);
+			cossecante.graphics.lineStyle(tickNormal, cossecanteCor);
 			cossecante.graphics.moveTo(0, 0);
 			cossecante.graphics.lineTo(posCossecante.x, posCossecante.y);
 		}
 		
 		private function drawCotangente():void 
 		{
-			var posCotangente:Point = new Point(-raio / Math.tan(angulo), -raio);
+			var posCotangente:Point = new Point(Math.max(-1000, Math.min(-raio / Math.tan(angulo), 1000)), -raio);
 			
 			cotangente.graphics.clear();
 			
-			cotangente.graphics.lineStyle(thickInvisible, 0x400080, cotangenteAlpha);
+			cotangente.graphics.lineStyle(thickInvisible, cotangenteCor, cotangenteAlpha);
 			cotangente.graphics.moveTo(0, -raio);
 			cotangente.graphics.lineTo(posCotangente.x, posCotangente.y);
 			
-			cotangente.graphics.lineStyle(tickNormal, 0x400080);
+			cotangente.graphics.lineStyle(tickNormal, cotangenteCor);
 			cotangente.graphics.moveTo(0, -raio);
 			cotangente.graphics.lineTo(posCotangente.x, posCotangente.y);
 		}
 		
+		override public function reset(e:MouseEvent = null):void
+		{
+			angulo = -45 * Math.PI / 180;
+			pt.x = Math.cos(angulo) * raio + circle.x;
+			pt.y = Math.sin(angulo) * raio + circle.y;
+			linhaPontilhadaTangente.x = pt.x;
+			linhaPontilhadaTangente.y = pt.y;
+			drawTrigonometrics();
+		}
+		
+		
+		//Tutorial
+		private var balao:CaixaTexto;
+		private var pointsTuto:Array;
+		private var tutoBaloonPos:Array;
+		private var tutoPos:int;
+		//private var tutoPhaseFinal:Boolean;
+		private var tutoSequence:Array = ["Circulo.",
+										  "Bola.",
+										  "Quadrado."];
+										  
+		override public function iniciaTutorial(e:MouseEvent = null):void 
+		{
+			tutoPos = 0;
+			//tutoPhaseFinal = false;
+			if(balao == null){
+				balao = new CaixaTexto(true);
+				addChild(balao);
+				balao.visible = false;
+				
+				pointsTuto = 	[new Point(420, 240),
+								new Point(220, 350),
+								new Point(350, 220)];
+								
+				tutoBaloonPos = [[CaixaTexto.TOP, CaixaTexto.CENTER],
+								[CaixaTexto.LEFT, CaixaTexto.CENTER],
+								[CaixaTexto.LEFT, CaixaTexto.LAST]];
+			}
+			balao.removeEventListener(Event.CLOSE, closeBalao);
+			//feedBackScreen.removeEventListener(Event.CLOSE, iniciaTutorialSegundaFase);
+			
+			balao.setText(tutoSequence[tutoPos], tutoBaloonPos[tutoPos][0], tutoBaloonPos[tutoPos][1]);
+			balao.setPosition(pointsTuto[tutoPos].x, pointsTuto[tutoPos].y);
+			balao.addEventListener(Event.CLOSE, closeBalao);
+			balao.visible = true;
+		}
+		
+		private function closeBalao(e:Event):void 
+		{
+			/*if (tutoPhaseFinal) {
+				balao.removeEventListener(Event.CLOSE, closeBalao);
+				balao.visible = false;
+				feedBackScreen.removeEventListener(Event.CLOSE, iniciaTutorialSegundaFase);
+			}else{*/
+				tutoPos++;
+				if (tutoPos >= tutoSequence.length) {
+					balao.removeEventListener(Event.CLOSE, closeBalao);
+					balao.visible = false;
+					//feedBackScreen.addEventListener(Event.CLOSE, iniciaTutorialSegundaFase);
+					//tutoPhaseFinal = true;
+				}else {
+					balao.setText(tutoSequence[tutoPos], tutoBaloonPos[tutoPos][0], tutoBaloonPos[tutoPos][1]);
+					balao.setPosition(pointsTuto[tutoPos].x, pointsTuto[tutoPos].y);
+				}
+			//}
+		}
+		
+		/*private function iniciaTutorialSegundaFase(e:Event):void 
+		{
+			if(tutoPhaseFinal){
+				balao.setText("Você pode começar um novo exercício clicando aqui.", tutoBaloonPos[2][0], tutoBaloonPos[2][1]);
+				balao.setPosition(160, pointsTuto[2].y);
+				tutoPhaseFinal = false;
+			}
+		}*/
 	}
 	
 }

@@ -108,7 +108,7 @@ package BaseAssets
 		/**
 		 * Inicia o tutorial da atividade.
 		 */
-		public function iniciaTutorial(e:MouseEvent):void 
+		public function iniciaTutorial(e:MouseEvent = null):void 
 		{
 			
 		}
