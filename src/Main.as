@@ -24,7 +24,8 @@ package
 		private var cotangente:Sprite;
 		
 		private var circle:Sprite;
-		private var eixos:Sprite;
+		private var eixoX:Sprite;
+		private var eixoY:Sprite;
 		private var pt:Sprite;
 		
 		private var raio:Number = 150;
@@ -74,6 +75,10 @@ package
 			addListeners();
 			setTextForState();
 			
+			setChildIndex(barraTexto, numChildren - 1);
+			setChildIndex(opcoes, numChildren - 1);
+			setChildIndex(botoes, numChildren - 1);
+			setChildIndex(bordaAtividade, numChildren - 1);
 			iniciaTutorial();
 		}
 		
@@ -89,24 +94,51 @@ package
 		private function createEixos():void 
 		{
 			var sobraEixos:Number = 100;
-			eixos = new Sprite();
-			eixos.x = pontoCentral.x;
-			eixos.y = pontoCentral.y;
 			
-			eixos.graphics.lineStyle(1, 0x808080, 0.5);
-			eixos.graphics.moveTo(- 30, 0);
-			eixos.graphics.lineTo(raio + sobraEixos, 0);
-			drawRightArrow(eixos, raio + sobraEixos, 0);
-			eixos.graphics.moveTo(0, 30);
-			eixos.graphics.lineTo(0, - raio - sobraEixos);
-			drawUpArrow(eixos, 0, - raio - sobraEixos);
+			eixoX = new Sprite();
+			eixoX.buttonMode = true;
+			eixoX.mouseChildren = false;
+			eixoX.x = pontoCentral.x;
+			eixoX.y = pontoCentral.y;
 			
-			eixos.graphics.moveTo( -eixos.x, -raio);
-			eixos.graphics.lineTo(stage.stageWidth - eixos.x, -raio);
-			eixos.graphics.moveTo(raio, -eixos.y);
-			eixos.graphics.lineTo(raio, stage.stageWidth - eixos.y);
+			eixoX.graphics.lineStyle(1, 0x000000);
+			eixoX.graphics.moveTo(- 30, 0);
+			eixoX.graphics.lineTo(raio + sobraEixos, 0);
+			drawRightArrow(eixoX, raio + sobraEixos, 0);
 			
-			addChild(eixos);
+			eixoX.graphics.lineStyle(10, 0x000000, 0);
+			eixoX.graphics.moveTo(- 30, 0);
+			eixoX.graphics.lineTo(raio + sobraEixos, 0);
+			drawRightArrow(eixoX, raio + sobraEixos, 0);
+			
+			var rotulox:RotuloX = new RotuloX();
+			rotulox.x = raio + sobraEixos - 20;
+			rotulox.y = 10;
+			eixoX.addChild(rotulox);
+			
+			eixoY = new Sprite();
+			eixoY.buttonMode = true;
+			eixoY.mouseChildren = false;
+			eixoY.x = pontoCentral.x;
+			eixoY.y = pontoCentral.y;
+			
+			eixoY.graphics.lineStyle(1, 0x000000);
+			eixoY.graphics.moveTo(0, 30);
+			eixoY.graphics.lineTo(0, - raio - sobraEixos);
+			drawUpArrow(eixoY, 0, - raio - sobraEixos);
+			
+			eixoY.graphics.lineStyle(10, 0x000000, 0);
+			eixoY.graphics.moveTo(0, 30);
+			eixoY.graphics.lineTo(0, - raio - sobraEixos);
+			drawUpArrow(eixoY, 0, - raio - sobraEixos);
+			
+			var rotuloy:RotuloY = new RotuloY();
+			rotuloy.x = -10
+			rotuloy.y = - raio - sobraEixos + 23;
+			eixoY.addChild(rotuloy);
+			
+			addChild(eixoX);
+			addChild(eixoY);
 		}
 		
 		private var widthArrow:Number = 10;
@@ -129,13 +161,17 @@ package
 		
 		private function createCircle():void 
 		{
-			if(circle == null){
-				circle = new Sprite();
-				circle.x = pontoCentral.x;
-				circle.y = pontoCentral.y;
-				addChild(circle);
-			}
-			circle.graphics.clear();
+			circle = new Sprite();
+			circle.x = pontoCentral.x;
+			circle.y = pontoCentral.y;
+			addChild(circle);
+				
+			circle.graphics.lineStyle(1, 0xC0C0C0);
+			circle.graphics.moveTo( -circle.x, -raio);
+			circle.graphics.lineTo(stage.stageWidth - circle.x, -raio);
+			circle.graphics.moveTo(raio, -circle.y);
+			circle.graphics.lineTo(raio, stage.stageWidth - circle.y);
+			
 			circle.graphics.lineStyle(1, 0x000000);
 			circle.graphics.drawCircle(0, 0, raio);
 		}
@@ -249,6 +285,7 @@ package
 		private var names:Array = ["seno", "cosseno", "tangente", "secante", "cossecante", "cotangente"];
 		private var cores:Array = ["vermelho", "verde", "amarelo", "azul", "rosa", "roxo"];
 		private var coresUint:Array;
+		private var angleColor:uint = 0xFF0000;
 		private var angulosEspeciais:Array = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330];
 		private var notacaoAngulosEspeciais:Array = ["0","π/6", "π/4", "π/3", "π/2", "2π/3", "3π/4", "5π/6", "π", "7π/6", "5π/4", "4π/3", "3π/2", "5π/3", "7π/4", "11π/6"];
 		private var useGlow:Boolean = true;
@@ -276,6 +313,9 @@ package
 					if (obj == pt) {
 						barraTexto.texto.text = "Arraste o ponto para modificar os segmentos.";
 					}else if (obj == sprAngulo) {
+						//glow.color = angleColor;
+						//sprAngulo.filters = [glow];
+						
 						var a:Angle = new Angle();
 						a.radians = -angulo;
 						a.domain = Angle.ZERO_TO_PLUS_2PI;
@@ -284,6 +324,10 @@ package
 						
 						if(indiceAngulo > -1) barraTexto.texto.text = "Ângulo entre o eixo x e o segmento que liga (0,0) ao ponto P = " + notacaoAngulosEspeciais[indiceAngulo] + " rad.";
 						else barraTexto.texto.text = "Ângulo entre o eixo x e o segmento que liga (0,0) ao ponto P = " + a.radians.toFixed(2) + " rad.";
+					}else if (obj == eixoX) {
+						barraTexto.texto.text = "Eixo x.";
+					}else if (obj == eixoY) {
+						barraTexto.texto.text = "Eixo y.";
 					}
 				}
 			}else {
@@ -348,7 +392,7 @@ package
 			
 			lookAngle: for each (var item:Number in angulosEspeciais) 
 			{
-				if (Math.abs(item - a.degrees) < 2) {
+				if (Math.abs(item - a.degrees) < 3) {
 					angulo = -item * Math.PI / 180;
 					break lookAngle;
 				}
@@ -392,7 +436,7 @@ package
 			angleGraus = a.degrees;
 			
 			sprAngulo.graphics.clear();
-			sprAngulo.graphics.beginFill(0xFF0000);
+			sprAngulo.graphics.beginFill(angleColor, 0.5);
 			sprAngulo.graphics.moveTo(0, 0);
 			sprAngulo.graphics.lineTo(raioAngle, 0);
 			for (var i:int = 0; i <= angleGraus; i++)
@@ -400,6 +444,14 @@ package
 				sprAngulo.graphics.lineTo(raioAngle * Math.cos(-i * Math.PI / 180), raioAngle * Math.sin(-i * Math.PI / 180));
 			}
 			sprAngulo.graphics.lineTo(0, 0);
+			sprAngulo.graphics.endFill();
+			
+			sprAngulo.graphics.lineStyle(2, angleColor);
+			sprAngulo.graphics.moveTo(raioAngle, 0);
+			for (i = 0; i <= angleGraus; i++)
+			{
+				sprAngulo.graphics.lineTo(raioAngle * Math.cos(-i * Math.PI / 180), raioAngle * Math.sin(-i * Math.PI / 180));
+			}
 		}
 		
 		private var senoAlpha:Number = 0;
@@ -526,8 +578,8 @@ package
 		private var tutoPos:int;
 		//private var tutoPhaseFinal:Boolean;
 		private var tutoSequence:Array = ["Circulo.",
-										  "Bola.",
-										  "Quadrado."];
+										  "Seno, cosseno, tangente, secante, cossecante e cotangente.",
+										  "Eixos x e y."];
 										  
 		override public function iniciaTutorial(e:MouseEvent = null):void 
 		{

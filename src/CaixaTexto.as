@@ -136,6 +136,8 @@ package
 				return;
 			}
 			
+			texto.width = texto.textWidth + 5;
+			width = texto.width;
 			currentWidth = width;
 			if(side != null) sideForArrow = side;
 			if(align != null) alignForArrow = align;

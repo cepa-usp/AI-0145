@@ -18,8 +18,8 @@ package BaseAssets
 		private var orientacoesScreen:InstScreen;
 		private var feedbackScreen:FeedBackScreen;
 		
-		private var bordaAtividade:Borda;
-		public var botoes:Botoes;
+		protected var bordaAtividade:Borda;
+		protected var botoes:Botoes;
 		
 		public function BaseMain() 
 		{
