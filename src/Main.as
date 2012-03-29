@@ -1,4 +1,4 @@
-package 
+﻿package 
 {
 	import BaseAssets.BaseMain;
 	import cepa.utils.Angle;
@@ -112,7 +112,7 @@ package
 			drawRightArrow(eixoX, raio + sobraEixos, 0);
 			
 			var rotulox:RotuloX = new RotuloX();
-			rotulox.x = raio + sobraEixos - 20;
+			rotulox.x = raio + sobraEixos;
 			rotulox.y = 10;
 			eixoX.addChild(rotulox);
 			
@@ -133,8 +133,8 @@ package
 			drawUpArrow(eixoY, 0, - raio - sobraEixos);
 			
 			var rotuloy:RotuloY = new RotuloY();
-			rotuloy.x = -10
-			rotuloy.y = - raio - sobraEixos + 23;
+			rotuloy.x = -8;
+			rotuloy.y = - raio - sobraEixos;
 			eixoY.addChild(rotuloy);
 			
 			addChild(eixoX);
@@ -255,7 +255,7 @@ package
 		private function criaOpcoes():void 
 		{
 			opcoes = new MenuTrigonometrico();
-			opcoes.x = stage.stageWidth - opcoes.width - bordaOpcoes;
+			opcoes.x = bordaOpcoes;
 			opcoes.y = bordaOpcoes;
 			addChild(opcoes);
 			
