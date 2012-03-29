@@ -83,9 +83,28 @@ package
 			iniciaTutorial();
 		}
 		
+		private var funcoesLetras:Array = [	["A", function(raio:Number, angulo:Number):Point { return new Point(raio, 0) }],
+											["B", function(raio:Number, angulo:Number):Point { return new Point(0, -raio) }],
+											["C", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), raio * Math.sin(angulo)) }],
+											["D", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), 0) }],
+											["E", function(raio:Number, angulo:Number):Point { return new Point(0, raio * Math.sin(angulo)) }],
+											["F", function(raio:Number, angulo:Number):Point { return new Point(raio, raio * Math.tan(angulo)) }],
+											["G", function(raio:Number, angulo:Number):Point { return new Point(raio / Math.cos(angulo), 0) }],
+											["H", function(raio:Number, angulo:Number):Point { return new Point(0, raio / Math.sin(angulo)) }],
+											["I", function(raio:Number, angulo:Number):Point { return new Point(-raio / Math.tan(angulo), -raio) }],
+											["0", function(raio:Number, angulo:Number):Point { return new Point(0, 0) } ]];
+											
+		private var letras:Vector.<Letra> = new Vector.<Letra>();
 		private function createLetras():void 
 		{
-			
+			for (var i:int = 0; i < funcoesLetras.length; i++) 
+			{
+				var letra:Letra = new Letra(funcoesLetras[i][0], pontoCentral, raio, angulo, funcoesLetras[i][1] );
+				letras.push(letra);
+				addChild(letra);
+				setChildIndex(letra, 0);
+				letra.posiciona();
+			}
 		}
 		
 		private function createTextBar():void 
@@ -433,12 +452,20 @@ package
 		
 		private function showLetters():void 
 		{
-			
+			for each (var item:Letra in letras) 
+			{
+				item.angulo = angulo;
+				item.posiciona();
+				item.visible = true;
+			}
 		}
 		
 		private function hideLetters():void 
 		{
-			
+			for each (var item:Letra in letras) 
+			{
+				item.visible = false;
+			}
 		}
 		
 		private function drawTrigonometrics():void 
