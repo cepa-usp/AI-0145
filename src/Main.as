@@ -378,6 +378,7 @@ package
 		
 		private function initDragPt(e:MouseEvent):void 
 		{
+			hideLetters();
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, movingPt);
 			stage.addEventListener(MouseEvent.MOUSE_UP, stopMovingPt);
 		}
@@ -410,6 +411,17 @@ package
 		{
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, movingPt);
 			stage.removeEventListener(MouseEvent.MOUSE_UP, stopMovingPt);
+			showLetters();
+		}
+		
+		private function showLetters():void 
+		{
+			
+		}
+		
+		private function hideLetters():void 
+		{
+			
 		}
 		
 		private function drawTrigonometrics():void 
