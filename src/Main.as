@@ -307,8 +307,8 @@ package
 						this[obj.name + "Alpha"] = 0.3;
 						drawTrigonometrics();
 					}
-					if (indexObj == 0 || indexObj == 1) barraTexto.texto.text = "O " + obj.name + " é definido pelo segmento de cor " + cores[indexObj] + ".";
-					else barraTexto.texto.text = "A " + obj.name + " é definida pelo segmento de cor " + cores[indexObj] + ".";
+					if (indexObj == 0 || indexObj == 1) barraTexto.texto.text = "O " + obj.name + " é definido como a medida do comprimento do segmento " + cores[indexObj] + ".";
+					else barraTexto.texto.text = "A " + obj.name + " é definida como a medida do comprimento do segmento " + cores[indexObj] + ".";
 				}else {
 					if (obj == pt) {
 						barraTexto.texto.text = "Arraste o ponto para modificar os segmentos.";
@@ -577,9 +577,11 @@ package
 		private var tutoBaloonPos:Array;
 		private var tutoPos:int;
 		//private var tutoPhaseFinal:Boolean;
-		private var tutoSequence:Array = ["Circulo.",
-										  "Seno, cosseno, tangente, secante, cossecante e cotangente.",
-										  "Eixos x e y."];
+		private var tutoSequence:Array = ["Arraste o ponto sobre a circunferência.",
+										  "Passe o mouse sobre um segmento colorido para ver qual função trigonométrica ele define.",
+										  "Você também pode passar o mouse sobre os itens desta lista.",
+										  "Passe o mouse sobre o ângulo...",
+										  "... e veja sua medida aqui."];
 										  
 		override public function iniciaTutorial(e:MouseEvent = null):void 
 		{
@@ -590,14 +592,19 @@ package
 				addChild(balao);
 				balao.visible = false;
 				
-				pointsTuto = 	[new Point(420, 240),
-								new Point(220, 350),
-								new Point(350, 220)];
+				pointsTuto = 	[pointPosition,
+								cossenoPosition,
+								new Point(opcoes.x, opcoes.y + opcoes.height / 2),
+								new Point(pontoCentral.x + raioAngle, pontoCentral.y),
+								new Point(barraTexto.x + 100, barraTexto.y)];
 								
-				tutoBaloonPos = [[CaixaTexto.TOP, CaixaTexto.CENTER],
-								[CaixaTexto.LEFT, CaixaTexto.CENTER],
-								[CaixaTexto.LEFT, CaixaTexto.LAST]];
+				tutoBaloonPos = [[CaixaTexto.LEFT, CaixaTexto.FIRST],
+								[CaixaTexto.TOP, CaixaTexto.CENTER],
+								[CaixaTexto.RIGHT, CaixaTexto.CENTER],
+								[CaixaTexto.LEFT, CaixaTexto.FIRST],
+								[CaixaTexto.BOTTON, CaixaTexto.FIRST]];
 			}
+			refreshPointPosition();
 			balao.removeEventListener(Event.CLOSE, closeBalao);
 			//feedBackScreen.removeEventListener(Event.CLOSE, iniciaTutorialSegundaFase);
 			
@@ -607,8 +614,40 @@ package
 			balao.visible = true;
 		}
 		
+		private var pointPosition:Point = new Point();
+		private var cossenoPosition:Point = new Point();
+		private function refreshPointPosition():void
+		{
+			pointPosition.x = pt.x;
+			pointPosition.y = pt.y;
+			
+			if (pt.x > stage.stageWidth / 2) {
+				tutoBaloonPos[0] = [CaixaTexto.RIGHT, CaixaTexto.FIRST];
+			}else {
+				tutoBaloonPos[0] = [CaixaTexto.LEFT, CaixaTexto.FIRST];
+			}
+		}
+		
+		private function refreshCossenoPosition():void
+		{
+			var bdsCosseno:Rectangle = cosseno.getBounds(cosseno);
+			cossenoPosition.y = cosseno.y + bdsCosseno.y;
+			if (pt.x > pontoCentral.x) {
+				cossenoPosition.x = cosseno.x + cosseno.width / 2 - 5;
+			}else {
+				cossenoPosition.x = cosseno.x - cosseno.width / 2 + 5;
+			}
+			
+			if (pt.y > pontoCentral.x) {
+				tutoBaloonPos[1][0] = CaixaTexto.BOTTON;
+			}else {
+				tutoBaloonPos[1][0] = CaixaTexto.TOP;
+			}
+		}
+		
 		private function closeBalao(e:Event):void 
 		{
+			refreshCossenoPosition();
 			/*if (tutoPhaseFinal) {
 				balao.removeEventListener(Event.CLOSE, closeBalao);
 				balao.visible = false;
