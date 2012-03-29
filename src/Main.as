@@ -1,4 +1,4 @@
-﻿package 
+package 
 {
 	import BaseAssets.BaseMain;
 	import cepa.utils.Angle;
@@ -71,6 +71,7 @@
 			linhaPontilhadaTangente.x = pt.x;
 			linhaPontilhadaTangente.y = pt.y;
 			drawTrigonometrics();
+			createLetras();
 			criaOpcoes();
 			addListeners();
 			setTextForState();
@@ -80,6 +81,11 @@
 			setChildIndex(botoes, numChildren - 1);
 			setChildIndex(bordaAtividade, numChildren - 1);
 			iniciaTutorial();
+		}
+		
+		private function createLetras():void 
+		{
+			
 		}
 		
 		private function createTextBar():void 
@@ -165,15 +171,24 @@
 			circle.x = pontoCentral.x;
 			circle.y = pontoCentral.y;
 			addChild(circle);
-				
-			circle.graphics.lineStyle(1, 0xC0C0C0);
-			circle.graphics.moveTo( -circle.x, -raio);
-			circle.graphics.lineTo(stage.stageWidth - circle.x, -raio);
-			circle.graphics.moveTo(raio, -circle.y);
-			circle.graphics.lineTo(raio, stage.stageWidth - circle.y);
+			
+			circle.graphics.lineStyle(10, 0x000000, 0);
+			circle.graphics.drawCircle(0, 0, raio);
 			
 			circle.graphics.lineStyle(1, 0x000000);
 			circle.graphics.drawCircle(0, 0, raio);
+			
+			var linhas:Sprite = new Sprite();
+			linhas.x = circle.x;
+			linhas.y = circle.y;
+			
+			linhas.graphics.lineStyle(1, 0xC0C0C0);
+			linhas.graphics.moveTo( -circle.x, -raio);
+			linhas.graphics.lineTo(stage.stageWidth - circle.x, -raio);
+			linhas.graphics.moveTo(raio, -circle.y);
+			linhas.graphics.lineTo(raio, stage.stageWidth - circle.y);
+			addChild(linhas);
+			setChildIndex(linhas, 0);
 		}
 		
 		private function createSprites():void 
@@ -283,7 +298,7 @@
 		}
 		
 		private var names:Array = ["seno", "cosseno", "tangente", "secante", "cossecante", "cotangente"];
-		private var cores:Array = ["vermelho", "verde", "amarelo", "azul", "rosa", "roxo"];
+		private var cores:Array = ["vermelho", "azul", "amarelo", "verde", "rosa", "marrom"];
 		private var coresUint:Array;
 		private var angleColor:uint = 0xFF0000;
 		private var angulosEspeciais:Array = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330];
@@ -328,6 +343,8 @@
 						barraTexto.texto.text = "Eixo x.";
 					}else if (obj == eixoY) {
 						barraTexto.texto.text = "Eixo y.";
+					}else if (obj == circle) {
+						barraTexto.texto.text = "Circunferência de raio unitário.";
 					}
 				}
 			}else {
@@ -473,12 +490,12 @@
 		private var cossecanteAlpha:Number = 0;
 		private var cotangenteAlpha:Number = 0;
 		
-		private var senoCor:uint = 0x800000;
-		private var cossenoCor:uint = 0x008000;
-		private var tangenteCor:uint = 0x808000;
-		private var secanteCor:uint = 0x0000FF;
-		private var cossecanteCor:uint = 0xFF0080;
-		private var cotangenteCor:uint = 0x400080;
+		private var senoCor:uint = 0xdc291e;
+		private var cossenoCor:uint = 0x001ca8;
+		private var tangenteCor:uint = 0xf5d312;
+		private var secanteCor:uint = 0x2eb135;
+		private var cossecanteCor:uint = 0xde1c85;
+		private var cotangenteCor:uint = 0x823e0d;
 		
 		private function drawSeno():void 
 		{
