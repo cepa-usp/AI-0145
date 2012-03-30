@@ -9,6 +9,8 @@ package
 	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	/**
 	 * ...
@@ -45,7 +47,7 @@ package
 		private var linhaPontilhadaTangente:LinhaPontilhada;
 		
 		private var barraTexto:TextoExplicativo;
-		private var pontoCentral:Point = new Point(320, 285);
+		private var pontoCentral:Point = new Point(350, 285);
 		
 		public function Main():void 
 		{
@@ -83,23 +85,70 @@ package
 			iniciaTutorial();
 		}
 		
-		private var funcoesLetras:Array = [	["A", function(raio:Number, angulo:Number):Point { return new Point(raio, 0) }],
-											["B", function(raio:Number, angulo:Number):Point { return new Point(0, -raio) }],
-											["C", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), raio * Math.sin(angulo)) }],
-											["D", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), 0) }],
-											["E", function(raio:Number, angulo:Number):Point { return new Point(0, raio * Math.sin(angulo)) }],
-											["F", function(raio:Number, angulo:Number):Point { return new Point(raio, raio * Math.tan(angulo)) }],
-											["G", function(raio:Number, angulo:Number):Point { return new Point(raio / Math.cos(angulo), 0) }],
-											["H", function(raio:Number, angulo:Number):Point { return new Point(0, raio / Math.sin(angulo)) }],
-											["I", function(raio:Number, angulo:Number):Point { return new Point(-raio / Math.tan(angulo), -raio) }],
-											["0", function(raio:Number, angulo:Number):Point { return new Point(0, 0) } ]];
+		private function offSetPosHorizontal(internalRaio:Number, raio:Number, angulo:Number, mult:Number):Point
+		{
+			var pt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
+			var offSet:Point = new Point();
+			
+			if (pt.x < 0) {
+				offSet.x = -mult * (internalRaio - 4);
+			}else {
+				offSet.x = mult * (internalRaio - 4);
+			}
+			
+			return offSet;
+		}
+		
+		private function offSetPosVertical(internalRaio:Number, raio:Number, angulo:Number, mult:Number):Point
+		{
+			var pt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
+			var offSet:Point = new Point();
+			
+			if (pt.y > 0) {
+				offSet.y = mult * internalRaio;
+			}else {
+				offSet.y = -mult * internalRaio;
+			}
+			
+			return offSet;
+		}
+		
+		private function offSetPosicionamento(internalRaio:Number, raio:Number, angulo:Number, mult:Number):Point
+		{
+			var pt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
+			var offSet:Point = new Point();
+			
+			if (pt.x < 0) {
+				offSet.x = -mult * (internalRaio - 4);
+			}else {
+				offSet.x = mult * (internalRaio - 4);
+			}
+			if (pt.y > 0) {
+				offSet.y = mult * internalRaio;
+			}else {
+				offSet.y = -mult * internalRaio;
+			}
+			
+			return offSet;
+		}
+		
+		private var funcoesLetras:Array = [	["A", function(raio:Number, angulo:Number):Point { return new Point(raio, 0) }, offSetPosVertical],
+											["B", function(raio:Number, angulo:Number):Point { return new Point(0, -raio) }, offSetPosHorizontal, true],
+											["C", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), raio * Math.sin(angulo)) }, offSetPosicionamento, false],
+											["D", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), 0) }, offSetPosVertical, true],
+											["E", function(raio:Number, angulo:Number):Point { return new Point(0, raio * Math.sin(angulo)) },offSetPosHorizontal, true],
+											["F", function(raio:Number, angulo:Number):Point { return new Point(raio, raio * Math.tan(angulo)) }, offSetPosVertical],
+											["G", function(raio:Number, angulo:Number):Point { return new Point(raio / Math.cos(angulo), 0) }, offSetPosHorizontal],
+											["H", function(raio:Number, angulo:Number):Point { return new Point(0, raio / Math.sin(angulo)) }, offSetPosVertical],
+											["I", function(raio:Number, angulo:Number):Point { return new Point(-raio / Math.tan(angulo), -raio) }, offSetPosHorizontal],
+											["0", function(raio:Number, angulo:Number):Point { return new Point(0, 0) }, offSetPosicionamento, true ]];
 											
 		private var letras:Vector.<Letra> = new Vector.<Letra>();
 		private function createLetras():void 
 		{
 			for (var i:int = 0; i < funcoesLetras.length; i++) 
 			{
-				var letra:Letra = new Letra(funcoesLetras[i][0], pontoCentral, raio, angulo, funcoesLetras[i][1] );
+				var letra:Letra = new Letra(funcoesLetras[i][0], pontoCentral, raio, angulo, funcoesLetras[i][1], funcoesLetras[i][2], funcoesLetras[i][3]);
 				letras.push(letra);
 				addChild(letra);
 				setChildIndex(letra, 0);
@@ -356,8 +405,8 @@ package
 						
 						var indiceAngulo:Number = angulosEspeciais.indexOf(Math.round(a.degrees));
 						
-						if(indiceAngulo > -1) barraTexto.texto.text = "Ângulo entre o eixo x e o segmento que liga (0,0) ao ponto P = " + notacaoAngulosEspeciais[indiceAngulo] + " rad.";
-						else barraTexto.texto.text = "Ângulo entre o eixo x e o segmento que liga (0,0) ao ponto P = " + a.radians.toFixed(2) + " rad.";
+						if(indiceAngulo > -1) barraTexto.texto.text = "Ângulo entre o eixo x e o segmento que liga o ponto 0 ao ponto C : " + notacaoAngulosEspeciais[indiceAngulo] + " rad.";
+						else barraTexto.texto.text = "Ângulo entre o eixo x e o segmento que liga o ponto 0 ao ponto C : " + a.radians.toFixed(2) + " rad.";
 					}else if (obj == eixoX) {
 						barraTexto.texto.text = "Eixo x.";
 					}else if (obj == eixoY) {
@@ -650,13 +699,13 @@ package
 				
 				pointsTuto = 	[pointPosition,
 								cossenoPosition,
-								new Point(opcoes.x, opcoes.y + opcoes.height / 2),
+								new Point(opcoes.x + opcoes.width, opcoes.y + opcoes.height / 2),
 								new Point(pontoCentral.x + raioAngle, pontoCentral.y),
 								new Point(barraTexto.x + 100, barraTexto.y)];
 								
 				tutoBaloonPos = [[CaixaTexto.LEFT, CaixaTexto.FIRST],
 								[CaixaTexto.TOP, CaixaTexto.CENTER],
-								[CaixaTexto.RIGHT, CaixaTexto.CENTER],
+								[CaixaTexto.LEFT, CaixaTexto.CENTER],
 								[CaixaTexto.LEFT, CaixaTexto.FIRST],
 								[CaixaTexto.BOTTON, CaixaTexto.FIRST]];
 			}
