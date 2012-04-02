@@ -727,9 +727,9 @@ package
 			pointPosition.y = pt.y;
 			
 			if (pt.x > stage.stageWidth / 2) {
-				tutoBaloonPos[0] = [CaixaTexto.RIGHT, CaixaTexto.FIRST];
-			}else {
 				tutoBaloonPos[0] = [CaixaTexto.LEFT, CaixaTexto.FIRST];
+			}else {
+				tutoBaloonPos[0] = [CaixaTexto.RIGHT, CaixaTexto.FIRST];
 			}
 		}
 		
