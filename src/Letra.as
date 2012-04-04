@@ -71,9 +71,7 @@ package
 			var posicao:Point = posicionamento(raio, angulo);
 			var offSetPoint:Point = new Point();
 			
-			//if (funcaoOffSet != null) offSetPoint = funcaoOffSet(raioLetra, raio, angulo, invertFuncao);
 			if (funcaoOffSet != null) offSetPoint = funcaoOffSet(txt.text);
-			trace(offSetPoint);
 			
 			this.x = posicao.x + ptCentral.x + offSetPoint.x * raioLetra;
 			this.y = posicao.y + ptCentral.y + offSetPoint.y * raioLetra;

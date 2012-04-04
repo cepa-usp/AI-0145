@@ -85,53 +85,6 @@ package
 			iniciaTutorial();
 		}
 		
-		private function offSetPosHorizontal(internalRaio:Number, raio:Number, angulo:Number, mult:Number):Point
-		{
-			var pt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
-			var offSet:Point = new Point();
-			
-			if (pt.x < 0) {
-				offSet.x = -mult * (internalRaio - 4);
-			}else {
-				offSet.x = mult * (internalRaio - 4);
-			}
-			
-			return offSet;
-		}
-		
-		private function offSetPosVertical(internalRaio:Number, raio:Number, angulo:Number, mult:Number):Point
-		{
-			var pt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
-			var offSet:Point = new Point();
-			
-			if (pt.y > 0) {
-				offSet.y = mult * internalRaio;
-			}else {
-				offSet.y = -mult * internalRaio;
-			}
-			
-			return offSet;
-		}
-		
-		/*private function offSetPosicionamento(internalRaio:Number, raio:Number, angulo:Number, mult:Number):Point
-		{
-			var pt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
-			var offSet:Point = new Point();
-			
-			if (pt.x < 0) {
-				offSet.x = -mult * (internalRaio - 4);
-			}else {
-				offSet.x = mult * (internalRaio - 4);
-			}
-			if (pt.y > 0) {
-				offSet.y = mult * internalRaio;
-			}else {
-				offSet.y = -mult * internalRaio;
-			}
-			
-			return offSet;
-		}*/
-		
 		private function offSetPosicionamento(nome:String):Point
 		{
 			var posPt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
@@ -334,17 +287,6 @@ package
 			return ptReturn;
 		}
 		
-		/*private var funcoesLetras:Array = [	["A", function(raio:Number, angulo:Number):Point { return new Point(raio, 0) }, offSetPosVertical],
-											["B", function(raio:Number, angulo:Number):Point { return new Point(0, -raio) }, offSetPosHorizontal, true],
-											["C", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), raio * Math.sin(angulo)) }, offSetPosicionamento, false],
-											["D", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), 0) }, offSetPosVertical, true],
-											["E", function(raio:Number, angulo:Number):Point { return new Point(0, raio * Math.sin(angulo)) },offSetPosHorizontal, true],
-											["F", function(raio:Number, angulo:Number):Point { return new Point(raio, raio * Math.tan(angulo)) }, offSetPosVertical],
-											["G", function(raio:Number, angulo:Number):Point { return new Point(raio / Math.cos(angulo), 0) }, offSetPosHorizontal],
-											["H", function(raio:Number, angulo:Number):Point { return new Point(0, raio / Math.sin(angulo)) }, offSetPosVertical],
-											["I", function(raio:Number, angulo:Number):Point { return new Point(-raio / Math.tan(angulo), -raio) }, offSetPosHorizontal],
-											["0", function(raio:Number, angulo:Number):Point { return new Point(0, 0) }, offSetPosicionamento, true ]];*/
-											
 		private var funcoesLetras:Array = [	["A", function(raio:Number, angulo:Number):Point { return new Point(raio, 0) }, 											offSetPosicionamento],
 											["B", function(raio:Number, angulo:Number):Point { return new Point(0, -raio) }, 											offSetPosicionamento],
 											["C", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), raio * Math.sin(angulo)) }, 	offSetPosicionamento],
@@ -361,7 +303,6 @@ package
 		{
 			for (var i:int = 0; i < funcoesLetras.length; i++) 
 			{
-				//var letra:Letra = new Letra(funcoesLetras[i][0], pontoCentral, raio, angulo, funcoesLetras[i][1], funcoesLetras[i][2], funcoesLetras[i][3]);
 				var letra:Letra = new Letra(funcoesLetras[i][0], pontoCentral, raio, angulo, funcoesLetras[i][1], funcoesLetras[i][2]);
 				letras.push(letra);
 				addChild(letra);
