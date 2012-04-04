@@ -113,7 +113,7 @@ package
 			return offSet;
 		}
 		
-		private function offSetPosicionamento(internalRaio:Number, raio:Number, angulo:Number, mult:Number):Point
+		/*private function offSetPosicionamento(internalRaio:Number, raio:Number, angulo:Number, mult:Number):Point
 		{
 			var pt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
 			var offSet:Point = new Point();
@@ -130,9 +130,211 @@ package
 			}
 			
 			return offSet;
+		}*/
+		
+		private function offSetPosicionamento(nome:String):Point
+		{
+			var posPt:Point = new Point(raio * Math.cos(angulo), raio * Math.sin(angulo));
+			var ptReturn:Point = new Point();
+			
+			switch(nome) {
+				case funcoesLetras[9][0]: // 0
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = -1;
+							ptReturn.y = 1;
+						}else { //Quadrante 2
+							ptReturn.x = -1;
+							ptReturn.y = 1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = 1;
+							ptReturn.y = 1;
+						}else { // Quadrante 4
+							ptReturn.x = -1;
+							ptReturn.y = 1;
+						}
+					}
+					break;
+				case funcoesLetras[0][0]: // A
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = 1;
+							ptReturn.y = 1;
+						}else { //Quadrante 2
+							ptReturn.x = 1;
+							ptReturn.y = 1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = 1;
+							ptReturn.y = 1;
+						}else { // Quadrante 4
+							ptReturn.x = 1;
+							ptReturn.y = 1;
+						}
+					}
+					break;
+				case funcoesLetras[1][0]: // B
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = -1;
+							ptReturn.y = -1;
+						}else { //Quadrante 2
+							ptReturn.x = 1;
+							ptReturn.y = -1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = 1;
+							ptReturn.y = -1;
+						}else { // Quadrante 4
+							ptReturn.x = 1;
+							ptReturn.y = -1;
+						}
+					}
+					break;
+				case funcoesLetras[2][0]: // C
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = 1;
+							ptReturn.y = -1;
+						}else { //Quadrante 2
+							ptReturn.x = -1;
+							ptReturn.y = -1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = -1;
+							ptReturn.y = 1;
+						}else { // Quadrante 4
+							ptReturn.x = 1;
+							ptReturn.y = 1;
+						}
+					}
+					break;
+				case funcoesLetras[3][0]: // D
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = 0;
+							ptReturn.y = 1;
+						}else { //Quadrante 2
+							ptReturn.x = 0;
+							ptReturn.y = 1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = 0;
+							ptReturn.y = -1;
+						}else { // Quadrante 4
+							ptReturn.x = 0;
+							ptReturn.y = -1;
+						}
+					}
+					break;
+				case funcoesLetras[4][0]: // E
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = -1;
+							ptReturn.y = 0;
+						}else { //Quadrante 2
+							ptReturn.x = 1;
+							ptReturn.y = 0;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = 1;
+							ptReturn.y = 0;
+						}else { // Quadrante 4
+							ptReturn.x = -1;
+							ptReturn.y = 0;
+						}
+					}
+					break;
+				case funcoesLetras[5][0]: // F
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = -1;
+							ptReturn.y = -1;
+						}else { //Quadrante 2
+							ptReturn.x = 1;
+							ptReturn.y = -1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = -1;
+							ptReturn.y = -1;
+						}else { // Quadrante 4
+							ptReturn.x = 1;
+							ptReturn.y = -1;
+						}
+					}
+					break;
+				case funcoesLetras[6][0]: // G
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = 0;
+							ptReturn.y = 1;
+						}else { //Quadrante 2
+							ptReturn.x = 0;
+							ptReturn.y = 1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = -1;
+							ptReturn.y = 0;
+						}else { // Quadrante 4
+							ptReturn.x = 0;
+							ptReturn.y = -1;
+						}
+					}
+					break;
+				case funcoesLetras[7][0]: // H
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = 1;
+							ptReturn.y = -1;
+						}else { //Quadrante 2
+							ptReturn.x = -1;
+							ptReturn.y = -1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = -1;
+							ptReturn.y = 1;
+						}else { // Quadrante 4
+							ptReturn.x = 0;
+							ptReturn.y = 1;
+						}
+					}
+					break;
+				case funcoesLetras[8][0]: // I
+					if (posPt.y < 0) {
+						if(posPt.x > 0){ //Quadrante 1
+							ptReturn.x = 0;
+							ptReturn.y = -1;
+						}else { //Quadrante 2
+							ptReturn.x = 1;
+							ptReturn.y = 1;
+						}
+					}else {
+						if (posPt.x < 0) { //Quadrante 3
+							ptReturn.x = 0;
+							ptReturn.y = 1;
+						}else { // Quadrante 4
+							ptReturn.x = 0;
+							ptReturn.y = -1;
+						}
+					}
+					break;
+				
+			}
+			
+			return ptReturn;
 		}
 		
-		private var funcoesLetras:Array = [	["A", function(raio:Number, angulo:Number):Point { return new Point(raio, 0) }, offSetPosVertical],
+		/*private var funcoesLetras:Array = [	["A", function(raio:Number, angulo:Number):Point { return new Point(raio, 0) }, offSetPosVertical],
 											["B", function(raio:Number, angulo:Number):Point { return new Point(0, -raio) }, offSetPosHorizontal, true],
 											["C", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), raio * Math.sin(angulo)) }, offSetPosicionamento, false],
 											["D", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), 0) }, offSetPosVertical, true],
@@ -141,14 +343,26 @@ package
 											["G", function(raio:Number, angulo:Number):Point { return new Point(raio / Math.cos(angulo), 0) }, offSetPosHorizontal],
 											["H", function(raio:Number, angulo:Number):Point { return new Point(0, raio / Math.sin(angulo)) }, offSetPosVertical],
 											["I", function(raio:Number, angulo:Number):Point { return new Point(-raio / Math.tan(angulo), -raio) }, offSetPosHorizontal],
-											["0", function(raio:Number, angulo:Number):Point { return new Point(0, 0) }, offSetPosicionamento, true ]];
+											["0", function(raio:Number, angulo:Number):Point { return new Point(0, 0) }, offSetPosicionamento, true ]];*/
+											
+		private var funcoesLetras:Array = [	["A", function(raio:Number, angulo:Number):Point { return new Point(raio, 0) }, 											offSetPosicionamento],
+											["B", function(raio:Number, angulo:Number):Point { return new Point(0, -raio) }, 											offSetPosicionamento],
+											["C", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), raio * Math.sin(angulo)) }, 	offSetPosicionamento],
+											["D", function(raio:Number, angulo:Number):Point { return new Point(raio * Math.cos(angulo), 0) }, 							offSetPosicionamento],
+											["E", function(raio:Number, angulo:Number):Point { return new Point(0, raio * Math.sin(angulo)) },							offSetPosicionamento],
+											["F", function(raio:Number, angulo:Number):Point { return new Point(raio, raio * Math.tan(angulo)) }, 						offSetPosicionamento],
+											["G", function(raio:Number, angulo:Number):Point { return new Point(raio / Math.cos(angulo), 0) }, 							offSetPosicionamento],
+											["H", function(raio:Number, angulo:Number):Point { return new Point(0, raio / Math.sin(angulo)) }, 							offSetPosicionamento],
+											["I", function(raio:Number, angulo:Number):Point { return new Point(-raio / Math.tan(angulo), -raio) }, 					offSetPosicionamento],
+											["0", function(raio:Number, angulo:Number):Point { return new Point(0, 0) }, 												offSetPosicionamento]];
 											
 		private var letras:Vector.<Letra> = new Vector.<Letra>();
 		private function createLetras():void 
 		{
 			for (var i:int = 0; i < funcoesLetras.length; i++) 
 			{
-				var letra:Letra = new Letra(funcoesLetras[i][0], pontoCentral, raio, angulo, funcoesLetras[i][1], funcoesLetras[i][2], funcoesLetras[i][3]);
+				//var letra:Letra = new Letra(funcoesLetras[i][0], pontoCentral, raio, angulo, funcoesLetras[i][1], funcoesLetras[i][2], funcoesLetras[i][3]);
+				var letra:Letra = new Letra(funcoesLetras[i][0], pontoCentral, raio, angulo, funcoesLetras[i][1], funcoesLetras[i][2]);
 				letras.push(letra);
 				addChild(letra);
 				setChildIndex(letra, 0);
